@@ -1,70 +1,87 @@
-import React, { useEffect, useState } from 'react'
-import './menu.css'
-import { RiShoppingBasket2Line } from "react-icons/ri";
+import React, { useEffect, useState } from 'react';
+import './App.css';
+import { RiShoppingBasket2Line, RiMenu4Fill } from "react-icons/ri";
 import { PiMusicNoteSimple } from "react-icons/pi";
-import { FaPoll } from 'react-icons/fa'
+import { LuCheckCheck } from "react-icons/lu";
+import Menu from './components/Menu/Menu';
+import AudioModal from './components/AudioModal';
+import PollModal from './components/PollModal';
+import ShoppingModal from './components/ShoppingModal';
 
+const ICONS = [
+  { label: 'audio', icon: <PiMusicNoteSimple size={28} /> },
+  { label: 'poll', icon: <LuCheckCheck size={28} /> },
+  { label: 'shopping', icon: <RiShoppingBasket2Line size={28} /> },
+];
+
+const MODALS = {
+  audio: AudioModal,
+  poll: PollModal,
+  shopping: ShoppingModal,
+};
 const App = () => {
-  const [open, setOpen] = useState(false)
-  const [focusedIndex, setFocusedIndex] = useState(0)
-
-  const ICONS = [
-    { label: 'Áudio', icon: <PiMusicNoteSimple size={28} /> },
-    { label: 'Enquete', icon: <FaPoll size={28} /> },
-    { label: 'Loja', icon: <RiShoppingBasket2Line size={28} /> },
-  ]
+  const [open, setOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(0);
+  const [activeModal, setActiveModal] = useState(null);
 
   useEffect(() => {
     const handleKeyUp = (e) => {
-      if (!open) {
+      // botão de voltar do controle remoto  responde a Escape e Backspace
+      // e também aos códigos de tecla específicos para TVs Samsung e LG
+      const BACK_KEYS = ['Escape', 'Backspace'];
+      const TV_BACK_KEYCODES = [10009, 461]; // Samsung e LG
+      
+      const isBackPressed = BACK_KEYS.includes(e.key) || TV_BACK_KEYCODES.includes(e.keyCode);
+      if (activeModal && isBackPressed) {
+        setActiveModal(null);
+        return;
+      }
+      if (!open && !activeModal) {
         if (e.key === 'Enter' || e.key === 'ArrowUp') {
-          setOpen(true)
-          setFocusedIndex(0)
+          setOpen(true);
+          setFocusedIndex(0);
         }
-        return
+        return;
       }
-      switch (e.key) {
-        case 'ArrowLeft':
-          setFocusedIndex(prev => (prev - 1 + ICONS.length) % ICONS.length)
-          break
-        case 'ArrowRight':
-          setFocusedIndex(prev => (prev + 1) % ICONS.length)
-          break
-        case 'Enter':
-          const selected = ICONS[focusedIndex]
-          console.log('Selecionado:', selected.label)
-          if (selected.label === 'Fechar') setOpen(false)
-          break
-        case 'ArrowDown':
-        case 'Escape':
-        case 'Backspace':
-          setOpen(false)
-          break
-        default:
-          break
+      if (open && !activeModal) {
+        switch (e.key) {
+          case 'ArrowLeft':
+            setFocusedIndex(prev => (prev - 1 + ICONS.length) % ICONS.length);
+            break;
+          case 'ArrowRight':
+            setFocusedIndex(prev => (prev + 1) % ICONS.length);
+            break;
+          case 'Enter':
+            setActiveModal(ICONS[focusedIndex].label);
+            break;
+          case 'ArrowDown':
+          case 'Escape':
+          case 'Backspace':
+            setOpen(false);
+            break;
+          default:
+            break;
+        }
       }
-    }
-    window.addEventListener('keyup', handleKeyUp)
-    return () => window.removeEventListener('keyup', handleKeyUp)
-  }, [open, focusedIndex])
+    };
+    window.addEventListener('keyup', handleKeyUp);
+    return () => window.removeEventListener('keyup', handleKeyUp);
+  }, [open, focusedIndex, activeModal]);
+  
+  const ActiveModalComponent = activeModal ? MODALS[activeModal] : null;
+
   return (
     <div className="container">
       <button className="menu-toggle" onClick={() => setOpen(!open)}>
-        {open ? '✕' : '☰'}
+        {open ? '✕' : 
+        <div className="menu-icon">
+          <RiMenu4Fill size={28} style={{ transform: 'scaleY(-1)' }} />
+        </div>}
       </button>
-      {open && (
-        <div className="menu">
-          {ICONS.map((item, index) => (
-            <button
-              key={item.label}
-              className={`menu-item ${focusedIndex === index ? 'focused' : ''}`}
-            >
-              {item.icon}
-            </button>
-          ))}
-        </div>
-      )}
+      {open && <Menu icons={ICONS} focusedIndex={focusedIndex} />}
+      {activeModal && <ActiveModalComponent onClose={() => setActiveModal(null)} />}
     </div>
-  )
-}
-export default App
+  );
+};
+export default App;
+
