@@ -29,9 +29,9 @@ const AudioModal = ({ onClose }) => {
   return (
     <Modal>
       <div className="modal-window">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{width: 40, height: 40, backgroundColor: '#CCCCCC', padding: '8px', borderRadius: '50%' }}>
-            <PiMusicNoteSimple size={24} style={{ margin: 7 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ width: 40, height: 40, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#CCCCCC', padding: '8px', borderRadius: '50%' }}>
+            <PiMusicNoteSimple size={24} />
           </div>
           <h3 style={{ color: '#fff'}}>Multi-áudio</h3>
         </div>

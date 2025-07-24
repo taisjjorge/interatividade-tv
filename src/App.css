@@ -20,6 +20,12 @@
 }
 
 .menu-toggle {
+  all: unset;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
   font-size: 2rem;
   background-color: #333333B8;
   color: #CCCCCC;
@@ -27,6 +33,13 @@
   cursor: pointer;
   width: 64px;
   height: 64px;
+}
+
+.menu-toggle.focused {
+  background-color: #CCCCCC;
+  color: #1F1F1F;
+  transform: scale(1.1);
+  transition: all 0.2s;
 }
 
 .menu {

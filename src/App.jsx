@@ -20,11 +20,14 @@ const MODALS = {
   poll: PollModal,
   shopping: ShoppingModal,
 };
+
 const App = () => {
   const [open, setOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(0);
+  const [menuFocused, setMenuFocused] = useState(false);
+  const [closeFocused, setCloseFocused] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
-
+  
   useEffect(() => {
     const handleKeyUp = (e) => {
       // botão de voltar do controle remoto  responde a Escape e Backspace
@@ -37,28 +40,51 @@ const App = () => {
         setActiveModal(null);
         return;
       }
+     
       if (!open && !activeModal) {
-        if (e.key === 'Enter' || e.key === 'ArrowUp') {
+        if (e.key === 'ArrowUp') {
+          setMenuFocused(true);
+        } else if (e.key === 'ArrowDown') {
+          setMenuFocused(false);
+        } else if (menuFocused && e.key === 'Enter') {
           setOpen(true);
           setFocusedIndex(0);
+          setMenuFocused(false);
         }
         return;
       }
+      
       if (open && !activeModal) {
+        if (closeFocused) {
+          if (e.key === 'ArrowLeft') {
+            setCloseFocused(false);
+            setFocusedIndex(ICONS.length - 1);
+          } else if (e.key === 'Enter') {
+            setOpen(false);
+            setCloseFocused(false);
+            setMenuFocused(true);
+          }
+          return;
+        }
         switch (e.key) {
           case 'ArrowLeft':
-            setFocusedIndex(prev => (prev - 1 + ICONS.length) % ICONS.length);
+            if (focusedIndex === 0) {
+              setCloseFocused(true);
+              setFocusedIndex(-1);
+            } else {
+              setFocusedIndex(prev => (prev - 1 + ICONS.length) % ICONS.length);
+            }
             break;
           case 'ArrowRight':
-            setFocusedIndex(prev => (prev + 1) % ICONS.length);
+            if (focusedIndex === ICONS.length - 1) {
+              setCloseFocused(true);
+              setFocusedIndex(-1);
+            } else {
+              setFocusedIndex(prev => (prev + 1) % ICONS.length);
+            }
             break;
           case 'Enter':
             setActiveModal(ICONS[focusedIndex].label);
-            break;
-          case 'ArrowDown':
-          case 'Escape':
-          case 'Backspace':
-            setOpen(false);
             break;
           default:
             break;
@@ -67,18 +93,31 @@ const App = () => {
     };
     window.addEventListener('keyup', handleKeyUp);
     return () => window.removeEventListener('keyup', handleKeyUp);
-  }, [open, focusedIndex, activeModal]);
+  }, [open, focusedIndex, activeModal, menuFocused, closeFocused]);
   
   const ActiveModalComponent = activeModal ? MODALS[activeModal] : null;
 
   return (
     <div className="container">
       {!activeModal && (
-        <button className="menu-toggle" onClick={() => setOpen(!open)}>
+        <button
+          className={`menu-toggle ${menuFocused || closeFocused ? 'focused' : ''}`}
+          onClick={() => {
+            if (open) {
+              setOpen(false);
+              setCloseFocused(false);
+              setMenuFocused(true);
+            } else {
+              setOpen(true);
+              setMenuFocused(false);
+              setFocusedIndex(0);
+            }
+          }}
+        >
           {open ? '✕' :
-          <div className="menu-icon">
-            <RiMenu4Fill size={28} style={{ transform: 'scaleY(-1)' }} />
-          </div>}
+            <div className="menu-icon">
+              <RiMenu4Fill size={28} style={{ transform: 'scaleY(-1)' }} />
+            </div>}
         </button>
       )}
       {open && !activeModal && (
