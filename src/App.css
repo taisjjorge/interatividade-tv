@@ -9,7 +9,7 @@
 }
 
 .menu-icon {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 8px #00000040;
   border-radius: 100px;
   width: 44px;
   height: 44px;
@@ -21,8 +21,8 @@
 
 .menu-toggle {
   font-size: 2rem;
-  background-color: #454545;
-  color: #AAAAAA;
+  background-color: #333333B8;
+  color: #CCCCCC;
   border-radius: 50%;
   cursor: pointer;
   width: 64px;
@@ -31,12 +31,11 @@
 
 .menu {
   border-radius: 100px;
-  width: 210px;
+  width: 200px;
   height: 70px;
-  /* width: 176px; */
+  /* width: 176px;  */
   /* height: 64px; */
-  /* gap: 1rem; */
-  background: rgba(51, 51, 51, 0.72);
+  background-color: #333333B8;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -46,23 +45,23 @@
 }
 
 .menu-item {
-  font-size: 1.5rem;
   background: #454545;
   color: #AAAAAA;
   border: none;
   border-radius: 50%;
-  padding: 1rem;
+  padding: .75rem;
   cursor: pointer;
-  width: 48px;
-  height: 48px;
   display: flex;
   align-items: center;
+  
+  width: 48px;
+  height: 48px;
 }
 
 .menu-item.focused {
   background-color: #CCCCCC;
   color: #1F1F1F;
-  outline: 3px solid #565656;
+  /* outline: 3px solid #565656; */
   transform: scale(1.1);
   transition: all 0.2s;
 }

@@ -3,15 +3,16 @@ import './App.css';
 import { RiShoppingBasket2Line, RiMenu4Fill } from "react-icons/ri";
 import { PiMusicNoteSimple } from "react-icons/pi";
 import { LuCheckCheck } from "react-icons/lu";
-import Menu from './components/Menu/Menu';
+
+import Menu from './components/Menu';
 import AudioModal from './components/AudioModal';
 import PollModal from './components/PollModal';
 import ShoppingModal from './components/ShoppingModal';
 
 const ICONS = [
-  { label: 'audio', icon: <PiMusicNoteSimple size={28} /> },
-  { label: 'poll', icon: <LuCheckCheck size={28} /> },
-  { label: 'shopping', icon: <RiShoppingBasket2Line size={28} /> },
+  { label: 'audio', icon: <PiMusicNoteSimple size={24} /> },
+  { label: 'poll', icon: <LuCheckCheck size={24} /> },
+  { label: 'shopping', icon: <RiShoppingBasket2Line size={24} /> },
 ];
 
 const MODALS = {
@@ -72,14 +73,20 @@ const App = () => {
 
   return (
     <div className="container">
-      <button className="menu-toggle" onClick={() => setOpen(!open)}>
-        {open ? '✕' : 
-        <div className="menu-icon">
-          <RiMenu4Fill size={28} style={{ transform: 'scaleY(-1)' }} />
-        </div>}
-      </button>
-      {open && <Menu icons={ICONS} focusedIndex={focusedIndex} />}
-      {activeModal && <ActiveModalComponent onClose={() => setActiveModal(null)} />}
+      {!activeModal && (
+        <button className="menu-toggle" onClick={() => setOpen(!open)}>
+          {open ? '✕' :
+          <div className="menu-icon">
+            <RiMenu4Fill size={28} style={{ transform: 'scaleY(-1)' }} />
+          </div>}
+        </button>
+      )}
+      {open && !activeModal && (
+        <Menu icons={ICONS} focusedIndex={focusedIndex} />
+      )}
+      {activeModal && (
+        <ActiveModalComponent onClose={() => setActiveModal(null)} />
+      )}
     </div>
   );
 };

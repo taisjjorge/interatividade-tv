@@ -1,0 +1,27 @@
+.option-button-container{
+  margin-bottom: 8px;
+}
+
+.option-button {
+  all: unset;
+  
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  
+  width: 218px;
+  /* height: 48px; */
+  height: 40px;
+  
+  background: #454545;
+  color: #CCCCCC;
+  border-radius: 100px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.option-button.focused {
+  background-color: #EEEEEE;
+  color: #333333B8;
+}
